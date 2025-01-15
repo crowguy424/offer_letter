@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offer Letter</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Add lights
+        const light = new THREE.AmbientLight(0x404040); // Ambient light
+        scene.add(light);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(1, 1, 1).normalize();
+        scene.add(directionalLight);
+
+        // Font loader
+        const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
+            // Create text geometry
+            const textGeometry = new THREE.TextGeometry('I LOVE YOU', {
+                font: font,
+                size: 10,
+                height: 2,
+                curveSegments: 12,
+            });
+
+            const textMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            textMesh.position.set(-50, 0, 0);  // Adjust position
+            scene.add(textMesh);
+
+            // Animation: rotate the text mesh
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Rotate the text mesh over time
+                textMesh.rotation.x += 0.01;
+                textMesh.rotation.y += 0.01;
+
+                // Optionally, animate the camera to add some movement
+                camera.position.x = 100 * Math.sin(Date.now() * 0.001);
+                camera.position.z = 100 * Math.cos(Date.now() * 0.001);
+                camera.lookAt(scene.position); // Keep the camera focused on the center
+
+                // Render the scene
+                renderer.render(scene, camera);
+            }
+
+            animate(); // Start the animation loop
+        });
+
+        // Set camera position
+        camera.position.z = 100;
+    </script>
+</body>
+</html>
